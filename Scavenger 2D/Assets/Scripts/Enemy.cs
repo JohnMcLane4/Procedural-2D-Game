@@ -13,6 +13,7 @@ public class Enemy : MovingObject {
 	// Use this for initialization
 	protected override void Start ()
     {
+        GameManager.instance.AddEmenyToList(this);                          //adds the enemy script to the GM list, for enemy movement control by GM 
         animator = GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player").transform;              //find the players position
         base.Start();
@@ -52,6 +53,9 @@ public class Enemy : MovingObject {
     protected override void OnCantMove<T>(T component)
     {
         Player hitPlayer = component as Player;
+
+        animator.SetTrigger("enemyHit");
+
         hitPlayer.LoseFood(playerDamage);
     }
 }

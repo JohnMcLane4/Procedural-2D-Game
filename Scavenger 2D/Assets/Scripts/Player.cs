@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Player : MovingObject {
@@ -9,6 +10,7 @@ public class Player : MovingObject {
     public int pointsPerFood = 10;
     public int pointsPerSoda = 20;
     public float restartLevelDelay = 1f;
+    public Text foodText;
 
     private Animator animator;
     private int food;
@@ -18,7 +20,9 @@ public class Player : MovingObject {
     {
         animator = GetComponent<Animator>();
 
-        food = GameManager.instance.playerFoodPoints;       //get the count of food froim gamemanager
+        food = GameManager.instance.playerFoodPoints;       //get the count of food from gamemanager
+
+        foodText.text = "Food: " + food;
 
         base.Start();
 	}
@@ -31,7 +35,7 @@ public class Player : MovingObject {
     // Update is called once per frame
     void Update ()
     {
-        if (!GameManager.instance.playersTurn) return;
+        if (!GameManager.instance.playersTurn) return;                  
 
         int horizontal = 0;                                             //store movement as 1 or -1 
         int vertical = 0;
@@ -54,10 +58,16 @@ public class Player : MovingObject {
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
         food--;                                                             //loose one unit food per step
+        foodText.text = "Food: " + food;
 
         base.AttemptMove<T>(xDir, yDir);                                    // call attemptmove
 
         RaycastHit2D hit;
+
+        if (Move(xDir, yDir, out hit))
+        {
+           
+        }
 
         CheckIfGameOver();
 
@@ -74,11 +84,13 @@ public class Player : MovingObject {
         else if (other.tag == "Food")
         {
             food += pointsPerFood;
+            foodText.text = "+" + pointsPerFood + " Food " + food;
             other.gameObject.SetActive(false);
         }
         else if (other.tag == "Soda")
         {
             food += pointsPerSoda;
+            foodText.text = "+" + pointsPerSoda + " Food " + food;
             other.gameObject.SetActive(false);
         }
     }
@@ -99,6 +111,7 @@ public class Player : MovingObject {
     {
         animator.SetTrigger("playerHit");
         food -= loss;
+        foodText.text = "-" + loss + " Food " + food;
         CheckIfGameOver();
     }
 
