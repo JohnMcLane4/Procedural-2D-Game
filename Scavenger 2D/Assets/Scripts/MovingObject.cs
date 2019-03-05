@@ -62,10 +62,10 @@ public abstract class MovingObject : MonoBehaviour {        //abstract makes cod
         T hitComponent = hit.transform.GetComponent<T>();           //...get a reference of what was hit 
 
         if (!canMove && hitComponent != null)                       //if canMove is false & hitComponent is not equal to null
-            onCantMove(hitComponent);                               //call onCantMove function with hitcomponent parameter
+            OnCantMove(hitComponent);                               //call onCantMove function with hitcomponent parameter
                                                     //so we can use it for player and enemy, to do stuff accordingly to what they encounter
     }    
 
-    protected abstract void onCantMove<T>(T component)      //marks missing/incomplete part/implimentation, that will be overwritten by inheriting classes 
+    protected abstract void OnCantMove<T>(T component)      //marks missing/incomplete part/implimentation, that will be overwritten by inheriting classes 
         where T : Component;    
 }
