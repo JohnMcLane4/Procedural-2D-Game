@@ -10,8 +10,11 @@ public class Enemy : MovingObject {
     private Transform target;
     private bool skipMove;
 
-	// Use this for initialization
-	protected override void Start ()
+    public AudioClip enemyAttack1;
+    public AudioClip enemyAttack2;
+
+    // Use this for initialization
+    protected override void Start ()
     {
         GameManager.instance.AddEmenyToList(this);                          //adds the enemy script to the GM list, for enemy movement control by GM 
         animator = GetComponent<Animator>();
@@ -57,5 +60,7 @@ public class Enemy : MovingObject {
         animator.SetTrigger("enemyHit");
 
         hitPlayer.LoseFood(playerDamage);
+
+        SoundManager.instance.RandomizeSFX(enemyAttack1, enemyAttack2);
     }
 }

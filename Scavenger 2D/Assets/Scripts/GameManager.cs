@@ -9,16 +9,16 @@ public class GameManager : MonoBehaviour
     public float levelStartDelay = 2f;
     public float turnDelay = 0.1f;
     public static GameManager instance = null;  //from everwhere accessable singleton instance
-    public BoardManager boardScript;
     public int playerFoodPoints = 100;
     [HideInInspector] public bool playersTurn = true;
 
     private Text levelText;
     private GameObject levelImage;
-    private int level = 0;
+    private BoardManager boardScript;
+    private int level = 1;
     private List<Enemy> enemies;
     private bool enemiesMoving;
-    private bool doingSetup;
+    private bool doingSetup = true;
 
     void Awake()
     {
@@ -33,24 +33,21 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);     //keep gamemanager from getting destroyed on sceneload to keep up with score e.g.
         enemies = new List<Enemy>();
-        boardScript = GetComponent<BoardManager>();        
-    }
-
-    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-    {
-        level++;
+        boardScript = GetComponent<BoardManager>();
 
         InitGame();
     }
 
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static public void CallbackInitialization()
+    {        
+        SceneManager.sceneLoaded += OnSceneLoaded;  //register a callback everytime a scene is loaded(not at the first time)
     }
-
-    void OnDisable()
+    
+    static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+        instance.level++;
+        instance.InitGame();
     }
 
     void InitGame()
